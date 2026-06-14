@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [page, setPage] = useState('home');
   const [lang, setLang] = useState('en');
+  const [exam, setExam] = useState('UPSC');
 
   // Doubt Solver State
   const [question, setQuestion] = useState('');
@@ -125,7 +126,7 @@ function App() {
     setAnswer('');
     try {
       const result = await callGroq(
-        `You are an expert UPSC tutor. Answer in ${lang === 'hi' ? 'Hindi' : 'English'} only. Keep it simple and clear.\n\nQuestion: ${question}`
+        `You are an expert ${exam} tutor. Answer in ${lang === 'hi' ? 'Hindi' : 'English'} only. Keep it simple and clear.\n\nQuestion: ${question}`
       );
       setAnswer(result);
     } catch (error) {
@@ -141,7 +142,7 @@ function App() {
     setSelected({});
     setScore(null);
     try {
-      const prompt = `Generate exactly ${numQuestions} MCQs on "${topic}" for UPSC exam in ${lang === 'hi' ? 'Hindi' : 'English'}.
+      const prompt = `Generate exactly ${numQuestions} MCQs on "${topic}" for ${exam} exam in ${lang === 'hi' ? 'Hindi' : 'English'}.
 Return ONLY a JSON array like this, no extra text:
 [
   {
@@ -203,7 +204,7 @@ Return ONLY a JSON array like this, no extra text:
     try {
       const today = new Date().toDateString();
       const result = await callGroq(
-        `Give me 10 important current affairs for UPSC aspirants for today (${today}).
+        `Give me 10 important current affairs for ${exam} aspirants for today (${today}).
 Write in ${lang === 'hi' ? 'Hindi' : 'English'}.
 Format each point as:
 - [Topic]: [Brief explanation in 2-3 lines]
@@ -243,10 +244,14 @@ Focus on: Indian politics, economy, international relations, science & technolog
               setMcqs([]);
               setScore(null);
               setAffairs('');
-            }}
+            }}  
           >
             {t.switchLang}
           </button>
+          <div className="exam-selector">
+            <button className={`exam-btn ${exam === 'UPSC' ? 'active' : ''}`} onClick={() => setExam('UPSC')}>UPSC</button>
+            <button className={`exam-btn ${exam === 'SSC' ? 'active' : ''}`} onClick={() => setExam('SSC')}>SSC</button>
+          </div>
         </div>
       </div>
 
